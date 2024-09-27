@@ -64,14 +64,14 @@ func updateEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Получаю ссылку для парсинга
-	parsedUrl, err := url.Parse(r.URL.String())
+	parsedURL, err := url.Parse(r.URL.String())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// Разбиваю ссылку на 2 части
-	afterUpdate := strings.Split(parsedUrl.Path, "/update/")
+	afterUpdate := strings.Split(parsedURL.Path, "/update/")
 
 	// Проверяю, что больше 2-х частей
 	if len(afterUpdate) < 2 {

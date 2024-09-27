@@ -130,7 +130,6 @@ func updateEndpoint(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-
 	// Инициализирую хранилище
 	Storage = NewMemStorage()
 

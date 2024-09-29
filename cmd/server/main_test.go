@@ -68,6 +68,9 @@ func TestUpdateEndpoint(t *testing.T) {
 			updateEndpoint(w, request)
 			res := w.Result()
 
+			// Закрываю тело ответа
+			res.Body.Close()
+
 			// Проверка StatusCode
 			assert.Equal(t, test.want.responseCode, res.StatusCode)
 			// Проверка заголовка

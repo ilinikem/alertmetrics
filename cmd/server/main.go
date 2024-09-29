@@ -13,8 +13,8 @@ type counter int64
 
 // MemStorage Хранение метрик
 type MemStorage struct {
-	Gauge   map[string]gauge
-	Counter map[string]counter
+	Gauge   map[string]gauge   `json:"gauge"`
+	Counter map[string]counter `json:"counter"`
 }
 
 // NewMemStorage Конструктор для инициализации MemStorage
@@ -35,7 +35,7 @@ func (m *MemStorage) UpdateGauge(key string, g gauge) {
 
 // UpdateCounter метод для обновления Counter
 func (m *MemStorage) UpdateCounter(key string, c counter) {
-	m.Counter[key] = c
+	m.Counter[key] += c
 }
 
 // Пока не надо
@@ -129,11 +129,41 @@ func updateEndpoint(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Вывел для себя полученные метрики
+//func getMetrics(w http.ResponseWriter, r *http.Request) {
+//
+//	// Разрешаю только GET метод
+//	if r.Method != http.MethodGet {
+//		w.WriteHeader(http.StatusMethodNotAllowed)
+//		return
+//	}
+//
+//	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+//	w.WriteHeader(http.StatusOK)
+//
+//	// Отдаю ответ в формате
+//	data, err := json.MarshalIndent(Storage, "", "  ")
+//
+//	// Если не смог десериализовать данные
+//	if err != nil {
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//		return
+//	}
+//
+//	_, err = w.Write(data)
+//
+//	if err != nil {
+//		http.Error(w, err.Error(), http.StatusInternalServerError)
+//		return
+//	}
+//}
+
 func main() {
 	// Инициализирую хранилище
 	Storage = NewMemStorage()
 
 	mux := http.NewServeMux()
+	//mux.HandleFunc("/metrics", getMetrics)
 	//mux.HandleFunc("/", mainPage)
 	mux.HandleFunc("/update/", updateEndpoint)
 

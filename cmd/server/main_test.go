@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/ilinikem/alertmetrics/internal/handlers"
+	"github.com/ilinikem/alertmetrics/internal/storage"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +11,8 @@ import (
 
 func TestUpdateEndpoint(t *testing.T) {
 	// Инициализация NewMemStorage
-	Storage = NewMemStorage()
+	memStorage := storage.NewMemStorage()
+	metricsHandler := handlers.NewMetricsHandler(memStorage)
 
 	type want struct {
 		responseCode   int
@@ -65,7 +68,7 @@ func TestUpdateEndpoint(t *testing.T) {
 			request := httptest.NewRequest(test.method, test.endpoint, nil)
 			// Куда положу ответ
 			w := httptest.NewRecorder()
-			updateEndpoint(w, request)
+			metricsHandler.UpdateEndpoint(w, request)
 			res := w.Result()
 
 			// Закрываю тело ответа

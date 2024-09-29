@@ -71,7 +71,6 @@ func TestUpdateEndpoint(t *testing.T) {
 			assert.Equal(t, test.want.responseCode, res.StatusCode)
 			// Проверка заголовка
 			assert.Equal(t, test.want.responseHeader, res.Header.Get("content-type"))
-
 		})
 	}
 }

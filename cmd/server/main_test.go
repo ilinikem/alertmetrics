@@ -60,6 +60,7 @@ func TestUpdateEndpoint(t *testing.T) {
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+
 			//Создаю запрос
 			request := httptest.NewRequest(test.method, test.endpoint, nil)
 			// Куда положу ответ

@@ -40,6 +40,6 @@ func (m *MemStorage) UpdatePollCount(key string) {
 // UpdateRandomValue рандомное значение
 func (m *MemStorage) UpdateRandomValue(key string) {
 	// Инициализирую генератор и сознаю число от 0 до 100
-	rand.Seed(time.Now().UnixNano())
+	rand.New(rand.NewSource(time.Now().UnixNano()))
 	m.Gauge[key] = Gauge(rand.Float64() * 100)
 }

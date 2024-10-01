@@ -34,7 +34,7 @@ func main() {
 	//err := http.ListenAndServe(":8080", mux)
 	r := chi.NewRouter()
 	r.Get("/", metricsHandler.GetAllMetrics)
-	r.Get("/value/", metricsHandler.GetMetric)
+	r.Get("/value/{typeMetric}/{nameMetric}", metricsHandler.GetMetric)
 	r.Post("/update/{typeMetric}/{nameMetric}/{valueMetric}", metricsHandler.UpdateEndpoint)
 	err := http.ListenAndServe(":8080", r)
 

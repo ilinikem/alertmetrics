@@ -170,8 +170,7 @@ func (h *MetricsHandler) GetAllMetrics(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 
-	var htmlResponse string
-	htmlResponse = fmt.Sprintf(`
+	htmlResponse := fmt.Sprintf(`
 		<!DOCTYPE html>
 		<html lang="ru">
 		<head>

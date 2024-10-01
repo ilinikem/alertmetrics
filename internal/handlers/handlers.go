@@ -127,7 +127,7 @@ func (h *MetricsHandler) GetMetric(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusOK)
 			floatValue := float64(value)
 			formattedValue := strconv.FormatFloat(floatValue, 'f', -1, 64)
-			_, err := w.Write([]byte(fmt.Sprintf("%s", formattedValue)))
+			_, err := w.Write([]byte(formattedValue))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				return

@@ -28,7 +28,6 @@ func (h *MetricsHandler) UpdateEndpoint(w http.ResponseWriter, r *http.Request) 
 
 	// Получаю ссылку для парсинга
 	parsedURL, err := url.Parse(r.URL.String())
-	fmt.Println(parsedURL)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -126,7 +125,7 @@ func (h *MetricsHandler) GetMetric(w http.ResponseWriter, r *http.Request) {
 		if value, exists := h.Storage.Gauge[nameMetric]; exists {
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(http.StatusOK)
-			_, err := w.Write([]byte(fmt.Sprintf("%.2f", value)))
+			_, err := w.Write([]byte(fmt.Sprintf("%f", value)))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				return

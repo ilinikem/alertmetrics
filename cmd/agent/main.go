@@ -58,12 +58,12 @@ func main() {
 		for {
 			for k, v := range memStorage.Gauge {
 				url := fmt.Sprintf("http://localhost:8080/update/gauge/%s/%f", k, v)
-				sendMetric(url)
+				SendMetric(url)
 			}
 
 			for k, v := range memStorage.Counter {
 				url := fmt.Sprintf("http://localhost:8080/update/counter/%s/%d", k, v)
-				sendMetric(url)
+				SendMetric(url)
 			}
 
 			fmt.Println("Отправляю")
@@ -73,8 +73,8 @@ func main() {
 	select {}
 }
 
-// Отправка метрик
-func sendMetric(u string) {
+// SendMetric Отправка метрик
+func SendMetric(u string) {
 	req, err := http.NewRequest("POST", u, nil)
 	if err != nil {
 		return

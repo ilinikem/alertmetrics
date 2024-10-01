@@ -9,20 +9,6 @@ import (
 
 func main() {
 
-	//r := chi.NewRouter()
-	//// Получаем машину по id
-	//r.Get("/car/{id}", carHandle)
-	//
-	//// Получаем по brand или по brand и model
-	//r.Route("/cars", func(r chi.Router) {
-	//	r.Get("/", carsHandle)
-	//	r.Route("/{brand}", func(r chi.Router) {
-	//		r.Get("/", carsBrandHandle)
-	//		r.Get("/{model}", carsBrandModelHandle)
-	//	})
-	//})
-	//log.Fatal(http.ListenAndServe(":8080", r))
-
 	// Инициализирую хранилище
 	memStorage := storage.NewMemStorage()
 	metricsHandler := handlers.NewMetricsHandler(memStorage)

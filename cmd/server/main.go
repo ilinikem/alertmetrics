@@ -18,7 +18,6 @@ func main() {
 	//mux.HandleFunc("/value/", metricsHandler.GetMetric)
 	//mux.HandleFunc("/", metricsHandler.GetAllMetrics)
 	//err := http.ListenAndServe(":8080", mux)
-
 	r := chi.NewRouter()
 	r.Get("/", metricsHandler.GetAllMetrics)
 	r.Get("/value/", metricsHandler.GetMetric)

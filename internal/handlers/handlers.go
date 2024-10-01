@@ -125,7 +125,9 @@ func (h *MetricsHandler) GetMetric(w http.ResponseWriter, r *http.Request) {
 		if value, exists := h.Storage.Gauge[nameMetric]; exists {
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(http.StatusOK)
-			_, err := w.Write([]byte(fmt.Sprintf("%f", value)))
+			floatValue := float64(value)
+			formattedValue := strconv.FormatFloat(floatValue, 'f', -1, 64)
+			_, err := w.Write([]byte(fmt.Sprintf("%s", formattedValue)))
 			if err != nil {
 				w.WriteHeader(http.StatusInternalServerError)
 				return
@@ -146,6 +148,9 @@ func (h *MetricsHandler) GetMetric(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusNotFound)
 				return
 			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+			return
 		}
 	} else {
 		w.WriteHeader(http.StatusBadRequest)

@@ -25,7 +25,9 @@ func parseFlags() {
 	var cnf Config
 	err := env.Parse(&cnf)
 	if err == nil {
-		flagRunHostAddr = cnf.Address
+		if cnf.Address != "" {
+			flagRunHostAddr = cnf.Address
+		}
 		flagSendFreq = cnf.ReportInterval
 		flagGetFreq = cnf.PollInterval
 	}

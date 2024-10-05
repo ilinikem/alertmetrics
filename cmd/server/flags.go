@@ -16,11 +16,11 @@ func parseFlags() {
 
 	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
 	flag.Parse()
-
 	var cnf Config
 	err := env.Parse(&cnf)
 	if err == nil {
-		flagRunHostAddr = cnf.Address
+		if cnf.Address != "" {
+			flagRunHostAddr = cnf.Address
+		}
 	}
-
 }

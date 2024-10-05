@@ -13,7 +13,7 @@ func main() {
 	parseFlags()
 
 	// Запускаю сервер
-	err := runServer()
+	err := runServer(flagRunHostAddr)
 	if err != nil {
 		panic(err)
 	}
@@ -21,7 +21,7 @@ func main() {
 }
 
 // runServer функция запуска сервера
-func runServer() error {
+func runServer(flagRunHostAddr string) error {
 
 	// Инициализирую хранилище
 	memStorage := storage.NewMemStorage()

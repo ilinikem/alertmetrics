@@ -11,12 +11,17 @@ var flagSendFreq int
 var flagGetFreq int
 
 type Config struct {
-	Address        string `env:"ADDRESS" envDefault:"localhost:8080"`
-	ReportInterval int    `env:"REPORT_INTERVAL" envDefault:"10"`
-	PollInterval   int    `env:"POLL_INTERVAL" envDefault:"2"`
+	Address        string `env:"ADDRESS"`
+	ReportInterval int    `env:"REPORT_INTERVAL"`
+	PollInterval   int    `env:"POLL_INTERVAL"`
 }
 
 func parseFlags() {
+
+	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
+	flag.IntVar(&flagSendFreq, "r", 10, "set frequency for send metrics in seconds")
+	flag.IntVar(&flagGetFreq, "p", 2, "set frequency for get metrics in seconds")
+	flag.Parse()
 
 	var cnf Config
 	err := env.Parse(&cnf)
@@ -27,9 +32,4 @@ func parseFlags() {
 		flagSendFreq = cnf.ReportInterval
 		flagGetFreq = cnf.PollInterval
 	}
-
-	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
-	flag.IntVar(&flagSendFreq, "r", 10, "set frequency for send metrics in seconds")
-	flag.IntVar(&flagGetFreq, "p", 2, "set frequency for get metrics in seconds")
-	flag.Parse()
 }

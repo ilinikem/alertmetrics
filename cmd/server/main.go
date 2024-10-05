@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/ilinikem/alertmetrics/internal/handlers"
 	"github.com/ilinikem/alertmetrics/internal/storage"
@@ -35,6 +36,7 @@ func runServer(flagRunHostAddr string) error {
 
 	err := http.ListenAndServe(flagRunHostAddr, r)
 	if err != nil {
+		fmt.Println("Ошибка запуска сервера:", err)
 		return err
 	}
 	return nil

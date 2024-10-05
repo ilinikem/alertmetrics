@@ -24,6 +24,7 @@ func parseFlags() {
 	if address != "" {
 		flagRunHostAddr = address
 	}
+
 	// Извлекаю переменную REPORT_INTERVAL из окружения
 	repInt := os.Getenv("REPORT_INTERVAL")
 	if repInt != "" {
@@ -33,6 +34,7 @@ func parseFlags() {
 		}
 		flagSendFreq = val
 	}
+
 	// Извлекаю переменную POLL_INTERVAL из окружения
 	polInt := os.Getenv("POLL_INTERVAL")
 	if polInt != "" {

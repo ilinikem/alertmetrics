@@ -10,6 +10,16 @@ import (
 
 func main() {
 
+	// Выполняю парсинг флагов
+	parseFlags()
+
+	// runAgent Запуск агента с флагами
+	runAgent(flagRunHostAddr, flagSendFreq, flagGetFreq)
+
+}
+
+func runAgent(flagRunHostAddr string, flagSendFreq, flagGetFreq int) {
+
 	memStorage := storage.NewMemStorage()
 
 	go func() {
@@ -50,24 +60,24 @@ func main() {
 			memStorage.UpdateRandomValue("RandomValue")
 
 			fmt.Println("Собираю")
-			time.Sleep(2 * time.Second)
+			time.Sleep(time.Duration(flagGetFreq) * time.Second)
 		}
 	}()
 
 	go func() {
 		for {
 			for k, v := range memStorage.Gauge {
-				url := fmt.Sprintf("http://localhost:8080/update/gauge/%s/%f", k, v)
+				url := fmt.Sprintf("http://%s/update/gauge/%s/%f", flagRunHostAddr, k, v)
 				SendMetric(url)
 			}
 
 			for k, v := range memStorage.Counter {
-				url := fmt.Sprintf("http://localhost:8080/update/counter/%s/%d", k, v)
+				url := fmt.Sprintf("http://%s/update/counter/%s/%d", flagRunHostAddr, k, v)
 				SendMetric(url)
 			}
 
 			fmt.Println("Отправляю")
-			time.Sleep(10 * time.Second)
+			time.Sleep(time.Duration(flagSendFreq) * time.Second)
 		}
 	}()
 	select {}

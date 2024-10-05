@@ -9,36 +9,33 @@ import (
 
 func main() {
 
-	//r := chi.NewRouter()
-	//// Получаем машину по id
-	//r.Get("/car/{id}", carHandle)
-	//
-	//// Получаем по brand или по brand и model
-	//r.Route("/cars", func(r chi.Router) {
-	//	r.Get("/", carsHandle)
-	//	r.Route("/{brand}", func(r chi.Router) {
-	//		r.Get("/", carsBrandHandle)
-	//		r.Get("/{model}", carsBrandModelHandle)
-	//	})
-	//})
-	//log.Fatal(http.ListenAndServe(":8080", r))
+	// Выполняю парсинг флагов
+	parseFlags()
+
+	// Запускаю сервер
+	err := runServer()
+	if err != nil {
+		panic(err)
+	}
+
+}
+
+// runServer функция запуска сервера
+func runServer() error {
 
 	// Инициализирую хранилище
 	memStorage := storage.NewMemStorage()
 	metricsHandler := handlers.NewMetricsHandler(memStorage)
 
-	//mux := http.NewServeMux()
-	//mux.HandleFunc("/update/", metricsHandler.UpdateEndpoint)
-	//mux.HandleFunc("/value/", metricsHandler.GetMetric)
-	//mux.HandleFunc("/", metricsHandler.GetAllMetrics)
-	//err := http.ListenAndServe(":8080", mux)
+	// Создаю роутер
 	r := chi.NewRouter()
 	r.Get("/", metricsHandler.GetAllMetrics)
 	r.Get("/value/{typeMetric}/{nameMetric}", metricsHandler.GetMetric)
 	r.Post("/update/{typeMetric}/{nameMetric}/{valueMetric}", metricsHandler.UpdateEndpoint)
-	err := http.ListenAndServe(":8080", r)
 
+	err := http.ListenAndServe(flagRunHostAddr, r)
 	if err != nil {
-		panic(err)
+		return err
 	}
+	return nil
 }

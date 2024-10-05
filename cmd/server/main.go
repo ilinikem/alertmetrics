@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/ilinikem/alertmetrics/internal/handlers"
 	"github.com/ilinikem/alertmetrics/internal/storage"
@@ -13,7 +14,7 @@ func main() {
 	parseFlags()
 
 	// Запускаю сервер
-	err := runServer()
+	err := runServer(flagRunHostAddr)
 	if err != nil {
 		panic(err)
 	}
@@ -21,7 +22,7 @@ func main() {
 }
 
 // runServer функция запуска сервера
-func runServer() error {
+func runServer(flagRunHostAddr string) error {
 
 	// Инициализирую хранилище
 	memStorage := storage.NewMemStorage()
@@ -35,6 +36,7 @@ func runServer() error {
 
 	err := http.ListenAndServe(flagRunHostAddr, r)
 	if err != nil {
+		fmt.Println("Ошибка запуска сервера:", err)
 		return err
 	}
 	return nil

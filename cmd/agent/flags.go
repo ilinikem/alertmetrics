@@ -2,34 +2,45 @@ package main
 
 import (
 	"flag"
-	"github.com/caarlos0/env/v6"
+	"os"
+	"strconv"
 )
 
-// Для адреса и порта
-var flagRunHostAddr string
-var flagSendFreq int
-var flagGetFreq int
-
-type Config struct {
-	Address        string `env:"ADDRESS"`
-	ReportInterval int    `env:"REPORT_INTERVAL"`
-	PollInterval   int    `env:"POLL_INTERVAL"`
-}
+// Для флагов
+var (
+	flagRunAddr  string
+	flagSendFreq int
+	flagGetFreq  int
+	flagLogLevel string
+)
 
 func parseFlags() {
 
-	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
+	flag.StringVar(&flagRunAddr, "a", "localhost:8080", "address and port to run server")
 	flag.IntVar(&flagSendFreq, "r", 10, "set frequency for send metrics in seconds")
 	flag.IntVar(&flagGetFreq, "p", 2, "set frequency for get metrics in seconds")
+	flag.StringVar(&flagLogLevel, "l", "info", "set log level")
+
 	flag.Parse()
 
-	var cnf Config
-	err := env.Parse(&cnf)
-	if err == nil {
-		if cnf.Address != "" {
-			flagRunHostAddr = cnf.Address
-		}
-		flagSendFreq = cnf.ReportInterval
-		flagGetFreq = cnf.PollInterval
+	flag.Parse()
+
+	if envRunAddr := os.Getenv("ADDRESS"); envRunAddr != "" {
+		flagRunAddr = envRunAddr
 	}
+
+	if envSendFreq := os.Getenv("REPORT_INTERVAL"); envSendFreq != "" {
+		if value, err := strconv.Atoi(envSendFreq); err == nil {
+			flagSendFreq = value
+		}
+	}
+	if envGetFreq := os.Getenv("POLL_INTERVAL"); envGetFreq != "" {
+		if value, err := strconv.Atoi(envGetFreq); err == nil {
+			flagGetFreq = value
+		}
+	}
+	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
+		flagLogLevel = envLogLevel
+	}
+
 }

@@ -14,7 +14,7 @@ func main() {
 	parseFlags()
 
 	// runAgent Запуск агента с флагами
-	runAgent(flagRunHostAddr, flagSendFreq, flagGetFreq)
+	runAgent(flagRunAddr, flagSendFreq, flagGetFreq)
 
 }
 

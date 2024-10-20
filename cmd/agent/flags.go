@@ -6,7 +6,7 @@ import (
 )
 
 // Для адреса и порта
-var flagRunHostAddr string
+var flagRunAddr string
 var flagSendFreq int
 var flagGetFreq int
 
@@ -18,7 +18,7 @@ type Config struct {
 
 func parseFlags() {
 
-	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
+	flag.StringVar(&flagRunAddr, "a", "localhost:8080", "address and port to run server")
 	flag.IntVar(&flagSendFreq, "r", 10, "set frequency for send metrics in seconds")
 	flag.IntVar(&flagGetFreq, "p", 2, "set frequency for get metrics in seconds")
 	flag.Parse()
@@ -27,7 +27,7 @@ func parseFlags() {
 	err := env.Parse(&cnf)
 	if err == nil {
 		if cnf.Address != "" {
-			flagRunHostAddr = cnf.Address
+			flagRunAddr = cnf.Address
 		}
 		flagSendFreq = cnf.ReportInterval
 		flagGetFreq = cnf.PollInterval

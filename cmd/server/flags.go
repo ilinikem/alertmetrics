@@ -2,51 +2,25 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"github.com/caarlos0/env/v6"
+	"os"
 )
 
-// Для адреса и порта
-var flagRunHostAddr string
+// Переменные для флагов
+var (
+	flagRunAddr  string
+	flagLogLevel string
+)
 
-type Config struct {
-	Address string `env:"ADDRESS"`
-}
-
-//func parseFlags() {
-//
-//	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
-//	flag.Parse()
-//
-//	var cnf Config
-//	err := env.Parse(&cnf)
-//
-//	if err == nil {
-//		fmt.Println(cnf.Address)
-//		if cnf.Address != "" {
-//			flagRunHostAddr = cnf.Address
-//		}
-//	}
-//}
-
+// Парсинг флагов и переменных из окружения
 func parseFlags() {
-
-	// Затем парсим флаги
-	flag.StringVar(&flagRunHostAddr, "a", "localhost:8080", "address and port to run server")
+	flag.StringVar(&flagRunAddr, "a", "localhost:8080", "address and port to run server")
+	flag.StringVar(&flagLogLevel, "l", "info", "set log level")
 	flag.Parse()
 
-	var cnf Config
-	// Сначала парсим переменные окружения
-	err := env.Parse(&cnf)
-	if err != nil {
-		fmt.Println("Ошибка при парсинге переменных окружения:", err)
+	if envRunAddr := os.Getenv("ADDRESS"); envRunAddr != "" {
+		flagRunAddr = envRunAddr
 	}
-
-	// Если переменная окружения была задана, используем её
-	if cnf.Address != "" {
-		flagRunHostAddr = cnf.Address
+	if envLogLevel := os.Getenv("LOG_LEVEL"); envLogLevel != "" {
+		flagLogLevel = envLogLevel
 	}
-
-	fmt.Println(flagRunHostAddr)
-
 }

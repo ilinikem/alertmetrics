@@ -32,10 +32,13 @@ func runServer() error {
 	// Создаю роутер
 	r := chi.NewRouter()
 	r.Get("/", metricsHandler.GetAllMetrics)
-	r.Post("/value/", metricsHandler.GetMetric)
-	r.Post("/value", metricsHandler.GetMetric)
-	r.Post("/update", metricsHandler.UpdateEndpoint)
-	r.Post("/update/", metricsHandler.UpdateEndpoint)
+
+	r.Post("/value", metricsHandler.GetMetricWithJSON)
+	r.Post("/update", metricsHandler.UpdateEndpointWithJSON)
+	r.Post("/value/", metricsHandler.GetMetricWithJSON)
+	r.Post("/update/", metricsHandler.UpdateEndpointWithJSON)
+	r.Get("/value/{typeMetric}/{nameMetric}", metricsHandler.GetMetric)
+	r.Post("/update/{typeMetric}/{nameMetric}/{valueMetric}", metricsHandler.UpdateEndpoint)
 
 	if err := logger.Initialize(flagLogLevel); err != nil {
 		return err

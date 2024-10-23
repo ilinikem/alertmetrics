@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"github.com/ilinikem/alertmetrics/internal/models"
 	"github.com/ilinikem/alertmetrics/internal/storage"
 	"net/http"
 	"runtime"
@@ -67,13 +70,25 @@ func runAgent(flagRunHostAddr string, flagSendFreq, flagGetFreq int) {
 	go func() {
 		for {
 			for k, v := range memStorage.Gauge {
-				url := fmt.Sprintf("http://%s/update/gauge/%s/%f", flagRunHostAddr, k, v)
-				SendMetric(url)
+				url := fmt.Sprintf("http://%s/update", flagRunHostAddr)
+				val := float64(v)
+				metric := models.Metrics{
+					ID:    k,
+					MType: "gauge",
+					Value: &val,
+				}
+				SendMetric(url, metric)
 			}
 
 			for k, v := range memStorage.Counter {
-				url := fmt.Sprintf("http://%s/update/counter/%s/%d", flagRunHostAddr, k, v)
-				SendMetric(url)
+				url := fmt.Sprintf("http://%s/update", flagRunHostAddr)
+				delta := int64(v)
+				metric := models.Metrics{
+					ID:    k,
+					MType: "counter",
+					Delta: &delta,
+				}
+				SendMetric(url, metric)
 			}
 
 			fmt.Println("Отправляю")
@@ -84,13 +99,19 @@ func runAgent(flagRunHostAddr string, flagSendFreq, flagGetFreq int) {
 }
 
 // SendMetric Отправка метрик
-func SendMetric(u string) {
-	req, err := http.NewRequest("POST", u, nil)
+func SendMetric(u string, metric models.Metrics) {
+	reqBody, err := json.Marshal(metric)
+	if err != nil {
+		return
+	}
+	req, err := http.NewRequest("POST", u, bytes.NewBuffer(reqBody))
 	if err != nil {
 		return
 	}
 
 	client := &http.Client{}
+	// Добавляю заголовок
+	req.Header.Set("Content-Type", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
 		return

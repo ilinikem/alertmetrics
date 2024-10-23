@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/go-chi/chi/v5"
 	"github.com/ilinikem/alertmetrics/internal/handlers"
 	"github.com/ilinikem/alertmetrics/internal/logger"
@@ -33,8 +32,10 @@ func runServer() error {
 	// Создаю роутер
 	r := chi.NewRouter()
 	r.Get("/", metricsHandler.GetAllMetrics)
-	r.Get("/value/{typeMetric}/{nameMetric}", metricsHandler.GetMetric)
-	r.Post("/update/{typeMetric}/{nameMetric}/{valueMetric}", metricsHandler.UpdateEndpoint)
+	r.Post("/value/", metricsHandler.GetMetric)
+	r.Post("/value", metricsHandler.GetMetric)
+	r.Post("/update", metricsHandler.UpdateEndpoint)
+	r.Post("/update/", metricsHandler.UpdateEndpoint)
 
 	if err := logger.Initialize(flagLogLevel); err != nil {
 		return err
@@ -43,10 +44,8 @@ func runServer() error {
 	logger.Log.Info("Running server", zap.String("address", flagRunAddr))
 
 	err := http.ListenAndServe(flagRunAddr, logger.RequestLogger(r))
-
 	if err != nil {
-		fmt.Println("Ошибка запуска сервера:", err)
-		return err
+		logger.Log.Fatal("Error for running server:", zap.Error(err))
 	}
 	return nil
 }

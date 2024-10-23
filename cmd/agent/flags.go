@@ -15,13 +15,10 @@ var (
 )
 
 func parseFlags() {
-
 	flag.StringVar(&flagRunAddr, "a", "localhost:8080", "address and port to run server")
 	flag.IntVar(&flagSendFreq, "r", 10, "set frequency for send metrics in seconds")
 	flag.IntVar(&flagGetFreq, "p", 2, "set frequency for get metrics in seconds")
 	flag.StringVar(&flagLogLevel, "l", "info", "set log level")
-
-	flag.Parse()
 
 	flag.Parse()
 

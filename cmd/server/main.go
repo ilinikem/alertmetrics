@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/ilinikem/alertmetrics/internal/handlers"
 	"github.com/ilinikem/alertmetrics/internal/logger"
+	"github.com/ilinikem/alertmetrics/internal/middlewares"
 	"github.com/ilinikem/alertmetrics/internal/storage"
 	"go.uber.org/zap"
 	"net/http"
@@ -46,7 +47,7 @@ func runServer() error {
 
 	logger.Log.Info("Running server", zap.String("address", flagRunAddr))
 
-	err := http.ListenAndServe(flagRunAddr, logger.RequestLogger(r))
+	err := http.ListenAndServe(flagRunAddr, logger.RequestLogger(middlewares.GzipMiddleware(r)))
 	if err != nil {
 		logger.Log.Fatal("Error for running server:", zap.Error(err))
 	}

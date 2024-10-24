@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"github.com/ilinikem/alertmetrics/internal/models"
@@ -104,7 +105,18 @@ func SendMetric(u string, metric models.Metrics) {
 	if err != nil {
 		return
 	}
-	req, err := http.NewRequest("POST", u, bytes.NewBuffer(reqBody))
+
+	// Буфер для хранения сжатых данных
+	var gzipBuf bytes.Buffer
+	gzipWriter := gzip.NewWriter(&gzipBuf)
+	_, err = gzipWriter.Write(reqBody)
+	if err != nil {
+		fmt.Println("Ошибка сжатия:", err)
+		return
+	}
+	gzipWriter.Close()
+
+	req, err := http.NewRequest("POST", u, &gzipBuf)
 	if err != nil {
 		return
 	}
@@ -112,6 +124,9 @@ func SendMetric(u string, metric models.Metrics) {
 	client := &http.Client{}
 	// Добавляю заголовок
 	req.Header.Set("Content-Type", "application/json")
+	// Добавляю header, что данные сжаты
+	req.Header.Set("Content-Encoding", "gzip")
+
 	resp, err := client.Do(req)
 	if err != nil {
 		return

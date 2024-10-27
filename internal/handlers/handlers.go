@@ -410,7 +410,7 @@ func (h *MetricsHandler) GetAllMetrics(w http.ResponseWriter, r *http.Request) {
 	for key, value := range h.Storage.Counter {
 		allMetrics[key] = fmt.Sprintf("%d", value)
 	}
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 
 	htmlResponse := fmt.Sprintf(`

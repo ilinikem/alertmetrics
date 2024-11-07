@@ -21,6 +21,13 @@ func main() {
 	// Инициализирую хранилище
 	memStorage := storage.NewMemStorage()
 
+	// Подключение к базе данных, если DSN указан
+	if flagDBDSN != "" {
+		if err := storage.InitDB(flagDBDSN); err != nil {
+			logger.Log.Fatal("Failed to connect to database", zap.Error(err))
+		}
+	}
+
 	// Загружаю данные
 	if flagRestore {
 		consumer, err := storage.NewConsumer(flagFileStoragePath)
@@ -93,6 +100,9 @@ func runServer(memStorage *storage.MemStorage) error {
 	r.Post("/update/", metricsHandler.UpdateEndpointWithJSON)
 	r.Get("/value/{typeMetric}/{nameMetric}", metricsHandler.GetMetric)
 	r.Post("/update/{typeMetric}/{nameMetric}/{valueMetric}", metricsHandler.UpdateEndpoint)
+
+	// Обработчик для /ping
+	r.Get("/ping", handlers.PingHandler)
 
 	if err := logger.Initialize(flagLogLevel); err != nil {
 		return err

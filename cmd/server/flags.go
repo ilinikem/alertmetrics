@@ -13,6 +13,7 @@ var (
 	flagStoreInterval   int
 	flagFileStoragePath string
 	flagRestore         bool
+	flagDBDSN           string
 )
 
 // Парсинг флагов и переменных из окружения
@@ -22,8 +23,8 @@ func parseFlags() {
 	flag.IntVar(&flagStoreInterval, "i", 5, "interval between saving store files")
 	flag.StringVar(&flagFileStoragePath, "f", "metrics.json", "path to file storage path")
 	flag.BoolVar(&flagRestore, "r", true, "load or not values on start")
+	flag.StringVar(&flagDBDSN, "d", "", "DSN to connect to the database")
 	flag.Parse()
-
 	if envRunAddr := os.Getenv("ADDRESS"); envRunAddr != "" {
 		flagRunAddr = envRunAddr
 	}
@@ -40,5 +41,8 @@ func parseFlags() {
 		if parsedRestore, err := strconv.ParseBool(envRestore); err == nil {
 			flagRestore = parsedRestore
 		}
+	}
+	if envDBDSN := os.Getenv("DATABASE_DSN"); envDBDSN != "" {
+		flagDBDSN = envDBDSN
 	}
 }

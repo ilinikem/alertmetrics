@@ -20,7 +20,9 @@ type MetricsHandler struct {
 
 // NewMetricsHandler Конструктор для создания нового хендлера
 func NewMetricsHandler(storage *storage.MemStorage) *MetricsHandler {
-	return &MetricsHandler{Storage: storage}
+	return &MetricsHandler{
+		Storage: storage,
+	}
 }
 
 func (h *MetricsHandler) UpdateEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -430,4 +432,18 @@ func (h *MetricsHandler) GetAllMetrics(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+}
+
+// Хендлер для проверки соединения с базой данных
+func PingHandler(w http.ResponseWriter, r *http.Request) {
+	err := storage.PingDB()
+	if err != nil {
+		// Логирую ошибку
+		logger.Log.Info("Ошибка подключения к базе данных", zap.Error(err))
+		http.Error(w, "Не удалось подключиться к базе данных", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Соединение с базой данных успешно установлено"))
 }
